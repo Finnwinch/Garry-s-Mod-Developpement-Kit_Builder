@@ -2,17 +2,18 @@
 echo "Conceptualization VCP (view-controler-partition) Architecture - by finnwinch📎"
 echo "VC Architecture was used to sperate action by level of design"
 read -p "Please enter the name of your script : " name
-cd ~/Steam/steamapps/common/GarrysModDS/garrysmod/addons #path about your server addons section
+cd "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\server\garrysmod\addons" #path about your server addons section
 while test -d $name ; do
 	read -p "Please enter a valide and unique name for your script : " name
 done
 mkdir $name
+code $name
 cd $name
 mkdir lua
 cd lua
 mkdir autorun
 cd autorun
-touch $name.src.lua #loader
+touch $name.src.lua #loader	include src parts
 cd ..
 mkdir $name
 cd $name
@@ -36,6 +37,11 @@ color_marine    = Color(60, 79, 118)"
 	cd ..
 fi
 mkdir class #class for management your addons
+cd class
+touch sv.core.lua	#addons controller SERVER
+touch cl.core.lua  #addons controller CLIENT
+touch sh.core.lua	#addons controller SHARED
+cd ..
 mkdir connection #folder contain networking
 cd connection
 #touch sv_base.lua #recive server example
@@ -59,5 +65,8 @@ mkdir sql #data access object
 #touch $name.cfg.lua
 #cd ..
 mkdir src #used for test implementation and final put data like pre config setup
-code ~/Steam/steamapps/common/GarrysModDS/garrysmod/addons/$name
+cd src
+touch ressource.lua	#download client part
+touch gunit.lua	#Unit test
+touch compile.lua	#runner
 read -p "Conceptualization VCP Architecture Finished!" closed
