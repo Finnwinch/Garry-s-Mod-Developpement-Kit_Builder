@@ -7,7 +7,6 @@ while test -d $name ; do
 	read -p "Please enter a valide and unique name for your script : " name
 done
 mkdir $name
-code $name
 cd $name
 mkdir lua
 cd lua
@@ -19,6 +18,7 @@ mkdir $name
 cd $name
 mkdir cache #cache color/materials/any
 read -p "do you want to precache default color ? (empty for no) : " color_preselected
+code $name
 if test ! -v $color_preselected ; then
 	cd cache
 	touch color.lua
