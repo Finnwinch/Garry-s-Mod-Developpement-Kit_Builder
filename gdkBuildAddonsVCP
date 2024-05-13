@@ -18,7 +18,6 @@ mkdir $name
 cd $name
 mkdir cache #cache color/materials/any
 read -p "do you want to precache default color ? (empty for no) : " color_preselected
-code $name
 if test ! -v $color_preselected ; then
 	cd cache
 	touch color.lua
@@ -36,16 +35,21 @@ color_marine    = Color(60, 79, 118)"
 	echo "$color_lists" >> color.lua
 	cd ..
 fi
+cd ..
+code $name
+cd $name
 mkdir class #class for management your addons
 cd class
+mkdir core
+cd core
 touch sv.core.lua	#addons controller SERVER
 touch cl.core.lua  #addons controller CLIENT
-touch sh.core.lua	#addons controller SHARED
+cd ..
 cd ..
 mkdir connection #folder contain networking
 cd connection
-#touch sv_base.lua #recive server example
-#touch cl_base.lua #recive client example
+touch sv.core.lua #recive server example
+touch cl.core.lua #recive client example
 touch registre.lua #all your networking register
 cd ..
 mkdir database #code about your table / droptable
@@ -69,4 +73,4 @@ cd src
 touch ressource.lua	#download client part
 touch gunit.lua	#Unit test
 touch compile.lua	#runner
-read -p "Conceptualization VCP Architecture Finished!" closed
+read -p "Conceptualization VCP 3.2 Architecture Finished!" closed
