@@ -2,12 +2,13 @@
 echo "Conceptualization VCP (view-controler-partition) Architecture - by finnwinch📎"
 echo "VC Architecture was used to sperate action by level of design"
 read -p "Please enter the name of your script : " name
-cd "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod\server\garrysmod\addons" #path about your server addons section
+cd "/mnt/c/Program Files (x86)/Steam/steamapps/common/GarrysMod/server/garrysmod/addons"
 while test -d $name ; do
 	read -p "Please enter a valide and unique name for your script : " name
 done
 mkdir $name
 cd $name
+git init
 mkdir lua
 cd lua
 mkdir autorun
@@ -32,7 +33,7 @@ color_dark      = Color(33, 37, 41)
 color_greyDark  = Color(52, 58, 64)
 color_mauve     = Color(128, 92, 145)
 color_marine    = Color(60, 79, 118)"
-	echo "$color_lists" >> color.lua
+	echo "$color_lists" > color.lua
 	cd ..
 fi
 cd ..
@@ -41,10 +42,10 @@ cd $name
 mkdir class #class for management your addons
 cd class
 mkdir core
-cd core
-touch sv.core.lua	#addons controller SERVER
-touch cl.core.lua  #addons controller CLIENT
-cd ..
+#cd core
+#touch server.lua	#addons controller SERVER
+#touch client.lua  #addons controller CLIENT
+#cd ..
 cd ..
 mkdir connection #folder contain networking
 cd connection
@@ -71,6 +72,7 @@ mkdir sql #data access object
 mkdir src #used for test implementation and final put data like pre config setup
 cd src
 touch ressource.lua	#download client part
-touch gunit.lua	#Unit test
+touch gunit_client.lua	#Unit test
+touch gunit_server.lua	#Unit test
 touch compile.lua	#runner
 read -p "Conceptualization VCP 3.2 Architecture Finished!" closed
