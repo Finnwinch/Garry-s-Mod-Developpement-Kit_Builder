@@ -14,6 +14,11 @@ cd lua
 mkdir autorun
 cd autorun
 touch $name.src.lua #loader	include src parts
+code="
+if SERVER then include("\$name/src/server/compile.lua\") end
+if CLIENT then include("\$name/src/client/compile.lua\") end
+"
+echo "$code" >> $name.src.lua
 cd ..
 mkdir $name
 cd $name
@@ -48,13 +53,32 @@ mkdir core
 #cd ..
 cd ..
 mkdir connection #folder contain networking
-cd connection
-touch sv.core.lua #recive server example
-touch cl.core.lua #recive client example
-touch registre.lua #all your networking register
-cd ..
 mkdir database #code about your table / droptable
 mkdir event #your hook used
+cd event
+code = "
+hook.Add("PreGamemodeLoaded","\init the $name\",function()
+    include("\$name/cache/color.lua\")
+end)
+hook.Add("PostGamemodeLoaded","\init the $nameGunit\",function()
+    include("\$name/src/client/gunit.lua\")
+    include("\$name/src/client/main.lua\")
+    MsgC(Color(255,0,0),"\@$name\",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese \n")
+end)
+"
+echo $code > cl_init.lua
+code = "
+hook.Add("PreGamemodeLoaded","\init the $name\",function()
+    include("\$name/cache/color.lua\")
+end)
+hook.Add("PostGamemodeLoaded","\init the $nameGunit\",function()
+    include("\$name/src/server/gunit.lua\")
+    include("\$name/src/server/main.lua\")
+    MsgC(Color(255,0,0),"\@$name\",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese \n")
+end)
+"
+echo $code > sv_init.lua
+cd ..
 mkdir import #all file imported, like framework
 mkdir interface #folder contain interface parts
 cd interface
@@ -71,8 +95,12 @@ mkdir sql #data access object
 #cd ..
 mkdir src #used for test implementation and final put data like pre config setup
 cd src
-touch ressource.lua	#download client part
-touch gunit_client.lua	#Unit test
-touch gunit_server.lua	#Unit test
-touch compile.lua	#runner
+mkdir server
+ressource = "
+"
+gunit = "
+"
+main = "
+"
+mkdir client
 read -p "Conceptualization VCP 3.2 Architecture Finished!" closed
