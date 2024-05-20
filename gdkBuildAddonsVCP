@@ -7,15 +7,16 @@ while test -d $name ; do
 	read -p "Please enter a valide and unique name for your script : " name
 done
 path="/mnt/c/Program Files (x86)/Steam/steamapps/common/GarrysMod/server/garrysmod/addons"
-
 main="if SERVER then include(\"$name/src/server/compile.lua\") end
 if CLIENT then include(\"$name/src/client/compile.lua\") end"
 
 clientCompile="include(\"$name/event/cl_init.lua\")
+include(\"$name/cache/color.lua\")
 MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"compile\")"
 
 serverCompile="include(\"$name/src/server/ressource.lua\")
 include(\"$name/event/sv_init.lua\")
+include(\"$name/cache/color.lua\")
 MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"compile\")"
 
 clientGunit="MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"test unitaire\")
@@ -106,5 +107,39 @@ echo -e "$serverInit" > sv_init.lua
 
 cd .. && mkdir cache && cd cache || exit
 echo -e "$color" > color.lua
+echo "
+$path
+└── $name
+    ├── lua
+        ├── autorun
+        │   └── $name.src.lua #autorunner. don't touch them
+        └── $name
+            ├── cache   #cache your variable here
+            │   └── color.lua
+            ├── database    #use your database module here
+            ├── event   #implement your hook here
+            │   ├── cl_init.lua #init the VCP
+            │   └── sv_init.lua #init the VCP
+            ├── import #import other code
+            ├── interface #interface strucutre
+            │   ├── components #interactivity
+            │   ├── container #your other child
+            │   ├── design #your paint part
+            │   └── layout #yout windows with one parent
+            ├── package #your own function
+            ├── sql #data acces objet here (can be dao or table of function or what ever, but with db)
+            └── src #you implement here your code
+                ├── client #client realm
+                │   ├── code #normally, you don't use them, but you can just put your folder here
+                │   ├── compile.lua #compile part
+                │   ├── gunit.lua #do your test here
+                │   └── main.lua #do your code here and inclusion
+                └── server #server realm
+                    ├── code #normally, you don't use them, but you can just put your folder here
+                    ├── compile.lua #compile part
+                    ├── gunit.lua #do your test here
+                    ├── main.lua #do your code here and inclusion
+                    └── ressource.lua #download client part
 
+"
 read -p "Conceptualization VCP 3.8 Architecture Finished! Press enter to close." closed
