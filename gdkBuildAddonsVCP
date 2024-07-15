@@ -22,21 +22,21 @@ EOF
 ###############################################]]##
 SourceClientCompile=$( cat <<EOF
 include("$name/event/cl_init.lua")
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\\n")
 EOF
 )
 ##[[###############################################
 # Source section - Client - Unit
 ###############################################]]##
 SourceClientUnit=$( cat <<EOF
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\\n")
 EOF
 )
 ##[[###############################################
 # Source section - Client - Main
 ###############################################]]##
 SourceClientMain=$( cat <<EOF
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\\n")
 EOF
 )
 ##[[###############################################
@@ -44,7 +44,7 @@ EOF
 ###############################################]]##
 SourceServerCompile=$( cat <<EOF
 include("$name/event/sv_init.lua")
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\\n")
 EOF
 )
 ##[[###############################################
@@ -56,7 +56,7 @@ AddCSLuaFile("$name/src/client/compile.lua")
 AddCSLuaFile("$name/src/client/gunit.lua")
 AddCSLuaFile("$name/event/cl_init.lua")
 AddCSLuaFile("$name/src/client/main.lua")
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"ressource\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"ressource\\n")
 AddCSLuaFile("$name/controller/core/client.lua")
 EOF
 )
@@ -64,14 +64,14 @@ EOF
 # Source section - Server - Unit
 ###############################################]]##
 SourceServerUnit=$( cat <<EOF
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\\n")
 EOF
 )
 ##[[###############################################
 # Source section - Server - Main
 ###############################################]]##
 SourceServerMain=$( cat <<EOF
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\\n")
 EOF
 )
 ##[[###############################################
@@ -144,7 +144,7 @@ end)
 hook.Add("PostGamemodeLoaded","init the $name Gunit and addons",function()
     include("$name/src/client/gunit.lua")
     include("$name/src/client/main.lua")
-    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\n")
+    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\\n")
 end)
 
 EOF
@@ -163,7 +163,7 @@ end)
 hook.Add("PostGamemodeLoaded","init the $name Gunit and addons",function()
     include("$name/src/server/gunit.lua")
     include("$name/src/server/main.lua")
-    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\n")
+    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\\n")
 end)
 EOF
 )
@@ -189,7 +189,7 @@ end
 $name.Core = setmetatable(Core,{
     __newindex = function(self,key,value) end,
     __call = function(self)
-        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller CLIENT\n")
+        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller CLIENT\\n")
         net.Receive("@$name::Core=>Controller{\$SERVER}{\$PRIVATE}",function(len)
             self:getListener(net.ReadString())(len)
         end)
@@ -221,7 +221,7 @@ end
 $name.Core = setmetatable(Core,{
     __newindex = function(self,key,value) end,
     __call = function(self)
-        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller SERVER\n")
+        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller SERVER\\n")
         net.Receive("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}",function(len)
             self:getListener(net.ReadString())(len)
         end)
@@ -266,7 +266,7 @@ echo -e "$SourceServerMain" > main.lua
 echo -e "$SourceServerRessource" > ressource.lua
 
 cd .. && cd ..
-mkdir sql database package import connection class
+mkdir sql database package import class
 
 mkdir interface && cd interface || exit
 mkdir layout design container components
