@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "Conceptualization VCP (view-controller-partition) Architecture - by finnwinch📎"
 echo "VCP architecture was developed to help young programmers in Garry's Mod without enough base knowledge on Lua or realm management"
 read -p "Please enter a unique and valid name for your script : " name
@@ -7,72 +6,243 @@ while test -d $name ; do
 	read -p "Please enter a valide and unique name for your script : " name
 done
 path="/mnt/c/Program Files (x86)/Steam/steamapps/common/GarrysMod/server/garrysmod/addons"
-main="if SERVER then include(\"$name/src/server/compile.lua\") end
-if CLIENT then include(\"$name/src/client/compile.lua\") end"
-
-clientCompile="include(\"$name/event/cl_init.lua\")
-include(\"$name/cache/color.lua\")
-MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"compile\")"
-
-serverCompile="include(\"$name/src/server/ressource.lua\")
-include(\"$name/event/sv_init.lua\")
-include(\"$name/cache/color.lua\")
-MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"compile\")"
-
-clientGunit="MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"test unitaire\")
-PrintTable(color_primary)"
-
-serverGunit="MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"test unitaire\")
-PrintTable(color_primary)"
-
-clientMain="--[[
-    you can code here your addons or, struct your file into code folder and include them here
-    **NOTE to include all client file into src/server/ressource
-    !! you have to include your code here!!!!!!!!!!!
-]]"
-
-serverMain="--[[
-    you can code here your addons or, struct your file into code folder and include them here
-    !! you have to include your code here!!!!!!!!!!!
-]]"
-
-ressource="AddCSLuaFile(\"$name/cache/color.lua\")
-AddCSLuaFile(\"$name/src/client/compile.lua\")
-AddCSLuaFile(\"$name/src/client/gunit.lua\")
-AddCSLuaFile(\"$name/event/cl_init.lua\")
-AddCSLuaFile(\"$name/src/client/main.lua\")
-MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" LOAD \",Color(255,0,255),\"ressource\")"
-
-clientInit="hook.Add(\"PreGamemodeLoaded\",\"init the $name preparation\",function()
-    include(\"$name/cache/color.lua\")
+###################
+#!!! Code part !!!#
+###################
+##[[###############################################
+# Autorun
+###############################################]]##
+main=$(cat <<EOF
+if SERVER then include("$name/src/server/compile.lua") end
+if CLIENT then include("$name/src/client/compile.lua") end
+EOF
+)
+##[[###############################################
+# Source section - Client - Compile
+###############################################]]##
+SourceClientCompile=$( cat <<EOF
+include("$name/event/cl_init.lua")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\n")
+EOF
+)
+##[[###############################################
+# Source section - Client - Unit
+###############################################]]##
+SourceClientUnit=$( cat <<EOF
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\n")
+EOF
+)
+##[[###############################################
+# Source section - Client - Main
+###############################################]]##
+SourceClientMain=$( cat <<EOF
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\n")
+EOF
+)
+##[[###############################################
+# Source section - Server - Compile
+###############################################]]##
+SourceServerCompile=$( cat <<EOF
+include("$name/event/sv_init.lua")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"compile\n")
+EOF
+)
+##[[###############################################
+# Source section - Server - Ressource
+###############################################]]##
+SourceServerRessource=$( cat <<EOF
+AddCSLuaFile("$name/cache/static.lua")
+AddCSLuaFile("$name/src/client/compile.lua")
+AddCSLuaFile("$name/src/client/gunit.lua")
+AddCSLuaFile("$name/event/cl_init.lua")
+AddCSLuaFile("$name/src/client/main.lua")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"ressource\n")
+AddCSLuaFile("$name/controller/core/client.lua")
+EOF
+)
+##[[###############################################
+# Source section - Server - Unit
+###############################################]]##
+SourceServerUnit=$( cat <<EOF
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"test unitaire\n")
+EOF
+)
+##[[###############################################
+# Source section - Server - Main
+###############################################]]##
+SourceServerMain=$( cat <<EOF
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"script\n")
+EOF
+)
+##[[###############################################
+# Cache - static
+###############################################]]##
+CacheStatic=$( cat <<EOF
+$name = {}
+--[[----------------------------------------------------------------
+    Colors options
+]]------------------------------------------------------------------
+$name.Colors = {}
+$name.Colors.Primary    = Color(0, 123, 255)
+$name.Colors.Secondary  = Color(108, 117, 125)
+$name.Colors.Success    = Color(40, 167, 69)
+$name.Colors.Danger     = Color(220, 53, 69)
+$name.Colors.Warning    = Color(255, 193, 7)
+$name.Colors.Info       = Color(23, 162, 184)
+$name.Colors.Light      = Color(248, 249, 250)
+$name.Colors.Dark       = Color(33, 37, 41)
+$name.Colors.Gray       = Color(52, 58, 64)
+--[[----------------------------------------------------------------
+    String options
+]]------------------------------------------------------------------
+$name.String = {}
+$name.String.AddonsName = "$name"
+$name.String.AddonsVersion = "1"
+--[[----------------------------------------------------------------
+    Screen options
+]]------------------------------------------------------------------
+$name.Screen = {}
+$name.Screen.Scale = CLIENT and 1
+$name.Screen.Wide = CLIENT and ScrW()
+$name.Screen.Tall = CLIENT and ScrH()
+$name.Screen.ResponsiveWide = CLIENT and function(value) return $name.Screen.Wide / (1920 / value) * $name.Screen.Scale end
+$name.Screen.ResponsiveTall = CLIENT and function(value) return $name.Screen.Tall / (1080 / value) * $name.Screen.Scale end
+--[[----------------------------------------------------------------
+    Materials options
+]]------------------------------------------------------------------
+$name.Materials = {}
+--[[----------------------------------------------------------------
+    Database options
+]]------------------------------------------------------------------
+$name.Database = {}
+$name.Database.Host = SERVER and "localhost"
+$name.Database.Port = SERVER and "3306"
+$name.Database.Database = SERVER and "MyTable"
+$name.Database.Username = SERVER and "root"
+$name.Database.Password = SERVER and "root"
+EOF
+)
+##[[###############################################
+# Network - registre
+###############################################]]##
+NetworkRegister=$(cat <<EOF
+util.AddNetworkString("@$name::Core=>Controller{\$SERVER}{\$PRIVATE}")
+util.AddNetworkString("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}")
+util.AddNetworkString("@$name::Core=>Controller{\$CLIENT}{\$ASYNC}")
+util.AddNetworkString("@$name::Core=>Controller{\$CLIENT}{\$ASYNC::RETURN}")
+EOF
+)
+##[[###############################################
+# Initialization - Client
+###############################################]]##
+EventInitClient=$(cat<<EOF
+hook.Add("PreGamemodeLoaded","init the $name preparation",function()
+    include("$name/cache/static.lua")
+    include("$name/controller/core/client.lua")
+    $name.Core()
 end)
-hook.Add(\"PostGamemodeLoaded\",\"init the $name Gunit and addons\",function()
-    include(\"$name/src/client/gunit.lua\")
-    include(\"$name/src/client/main.lua\")
-    MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" have been charge since \",Color(0,200,255),\"i like cheese\")
-end)"
-
-serverInit="hook.Add(\"PreGamemodeLoaded\",\"init the $name preparation\",function()
-    include(\"$name/cache/color.lua\")
+hook.Add("PostGamemodeLoaded","init the $name Gunit and addons",function()
+    include("$name/src/client/gunit.lua")
+    include("$name/src/client/main.lua")
+    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\n")
 end)
-hook.Add(\"PostGamemodeLoaded\",\"init the $name Gunit and addons\",function()
-    include(\"$name/src/server/gunit.lua\")
-    include(\"$name/src/server/main.lua\")
-    MsgC(Color(255,0,0),\"@$name\",Color(0,255,0),\" have been charge since \",Color(0,200,255),\"i like cheese\")
-end)"
 
-color="color_primary   = Color(0, 123, 255)
-color_secondary = Color(108, 117, 125)
-color_success   = Color(40, 167, 69)
-color_danger    = Color(220, 53, 69)
-color_warning   = Color(255, 193, 7)
-color_info      = Color(23, 162, 184)
-color_light     = Color(248, 249, 250)
-color_dark      = Color(33, 37, 41)
-color_greyDark  = Color(52, 58, 64)
-color_mauve     = Color(128, 92, 145)
-color_marine    = Color(60, 79, 118)"
+EOF
+)
+##[[###############################################
+# Initialization - Server
+###############################################]]##
+EventInitServer=$(cat<<EOF
+hook.Add("PreGamemodeLoaded","init the $name preparation",function()
+    include("$name/src/server/ressource.lua")
+    include("$name/cache/static.lua")
+    include("$name/controller/core/server.lua")
+    $name.Core()
+    include("$name/connection/registre.lua")
+end)
+hook.Add("PostGamemodeLoaded","init the $name Gunit and addons",function()
+    include("$name/src/server/gunit.lua")
+    include("$name/src/server/main.lua")
+    MsgC(Color(255,0,0),"@$name",Color(0,255,0)," have been charge since ",Color(0,200,255),"i like cheese\n")
+end)
+EOF
+)
+##[[###############################################
+# Controlleur - Core - Client
+###############################################]]##
+ControllerCoreClient=$(cat<<EOF
+local Core = { __listener = {} }
+function Core:getListener(StringIndex) return self.__listener[StringIndex].isEnable and self.__listener[StringIndex].void end
+function Core:setListener(StringIndex,VoidCatch) self.__listener[StringIndex] = { isEnable = true, void = VoidCatch } end
+function Core:removeListener(StringIndex) table.RemoveByValue(self.__listener,StringIndex) end
+function Core:enableListener(BooleanEnable,StringIndex) self.__listener[StringIndex].isEnable = BooleanEnable end
+function Core:request(StringCommand) net.Start("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}") net.WriteString(StringCommand) net.SendToServer() end
+function Core:async(TableStatic,TableArguments,StringServerExpression,StringClientExpression,BooleanIsForAllClients)
+    STATIC = TableStatic
+    net.Start("@$name::Core=>Controller{\$CLIENT}{\$ASYNC}")
+        net.WriteTable(TableArguments)
+        net.WriteString(StringServerExpression)
+        net.WriteString(StringClientExpression)
+        net.WriteBool(BooleanIsForAllClients)
+    net.SendToServer()
+end
+$name.Core = setmetatable(Core,{
+    __newindex = function(self,key,value) end,
+    __call = function(self)
+        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller CLIENT\n")
+        net.Receive("@$name::Core=>Controller{\$SERVER}{\$PRIVATE}",function(len)
+            self:getListener(net.ReadString())(len)
+        end)
+        net.Receive("@$name::Core=>Controller{\$CLIENT}{\$ASYNC::RETURN}",function(len)
+            RESULT = net.ReadTable()
+            if STATIC == nil then print("nop") ; return end
+            RunString(net.ReadString())
+            RESULT = nil
+        end)
+    end
+})
+EOF
+)
+##[[###############################################
+# Controlleur - Core - Server
+###############################################]]##
+ControllerCoreServer=$(cat<<EOF
+local Core = { __listener = {} }
+function Core:getListener(StringIndex) return self.__listener[StringIndex].isEnable and self.__listener[StringIndex].void end
+function Core:setListener(StringIndex,VoidCatch) self.__listener[StringIndex] = { isEnable = true, void = VoidCatch } end
+function Core:removeListener(StringIndex) table.RemoveByValue(self.__listener,StringIndex) end
+function Core:enableListener(BooleanEnable,StringIndex) self.__listener[StringIndex].isEnable = BooleanEnable end
+function Core:request(StringCommand,who) 
+    net.Start("@$name::Core=>Controller{\$SERVER}{\$PRIVATE}") 
+        net.WriteString(StringCommand)
+    net.Send(who)
+end
 
+$name.Core = setmetatable(Core,{
+    __newindex = function(self,key,value) end,
+    __call = function(self)
+        MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller SERVER\n")
+        net.Receive("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}",function(len)
+            self:getListener(net.ReadString())(len)
+        end)
+        net.Receive("@$name::Core=>Controller{\$CLIENT}{\$ASYNC}",function(len,ply)
+            ARGS = net.ReadTable()
+            RESULT = {}
+            RunString(net.ReadString())
+            net.Start("@$name::Core=>Controller{\$CLIENT}{\$ASYNC::RETURN}")
+                net.WriteTable(RESULT)
+                net.WriteString(net.ReadString())
+            Either(net.ReadBool(),net.Broadcast(),net.Send(ply))
+            ARGS = nil 
+            RESULT = nil
+        end)
+    end
+})
+EOF
+)
+#####################
+#!!! Folder Part !!!#
+#####################
 cd "$path" && mkdir "$name" && cd "$name" || exit
 git init
 code .
@@ -84,29 +254,39 @@ cd .. && mkdir "$name" && cd "$name" || exit
 mkdir src && cd src || exit
 mkdir client && cd client || exit
 mkdir code
-echo -e "$clientCompile" > compile.lua
-echo -e "$clientGunit" > gunit.lua
-echo -e "$clientMain" > main.lua
+echo -e "$SourceClientCompile" > compile.lua
+echo -e "$SourceClientUnit" > gunit.lua
+echo -e "$SourceClientMain" > main.lua
 
 cd .. && mkdir server && cd server || exit
 mkdir code
-echo -e "$serverCompile" > compile.lua
-echo -e "$serverGunit" > gunit.lua
-echo -e "$serverMain" > main.lua
-echo -e "$ressource" > ressource.lua
+echo -e "$SourceServerCompile" > compile.lua
+echo -e "$SourceServerUnit" > gunit.lua
+echo -e "$SourceServerMain" > main.lua
+echo -e "$SourceServerRessource" > ressource.lua
 
 cd .. && cd ..
-mkdir sql database package import connection class interface
-cd interface || exit
+mkdir sql database package import connection class
+
+mkdir interface && cd interface || exit
 mkdir layout design container components
 cd ..
 
+mkdir connection && cd connection || exit
+echo -e  "$NetworkRegister" > registre.lua
+cd ..
+
+mkdir controller && cd controller || exit
+echo -e "$ControllerCoreClient" > client.lua
+echo -e "$ControllerCoreServer" > server.lua
+cd ..
+
 mkdir event && cd event || exit
-echo -e "$clientInit" > cl_init.lua
-echo -e "$serverInit" > sv_init.lua
+echo -e "$EventInitClient" > cl_init.lua
+echo -e "$EventInitServer" > sv_init.lua
 
 cd .. && mkdir cache && cd cache || exit
-echo -e "$color" > color.lua
+echo -e "$CacheStatic" > static.lua
 echo "
 $path
 └── $name
@@ -115,8 +295,13 @@ $path
         │   └── $name.src.lua #autorunner. don't touch them
         └── $name
             ├── cache   #cache your variable here
-            │   └── color.lua
+            │   └── static.lua #contain all of var static
             ├── database    #use your database module here
+            ├── connection #netowrking section
+            │   └── all register networki
+            ├── controller # controller addons
+                ├── client.lua # client controller
+                └── server.lua # server controller
             ├── event   #implement your hook here
             │   ├── cl_init.lua #init the VCP
             │   └── sv_init.lua #init the VCP
@@ -142,4 +327,4 @@ $path
                     └── ressource.lua #download client part
 
 "
-read -p "Conceptualization VCP 3.8 Architecture Finished! Press enter to close." closed
+read -p "Conceptualization VCP 0.4.1 Architecture Finished! Press enter to close." closed
