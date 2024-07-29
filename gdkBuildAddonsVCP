@@ -398,4 +398,4 @@ $path
                     └── ressource.lua #download client part
 
 "
-read -p "Conceptualization VCP 0.4.1 Architecture Finished! Press enter to close." closed
+read -p "Conceptualization VCP 0.7.0 Architecture Finished! Press enter to close." closed
