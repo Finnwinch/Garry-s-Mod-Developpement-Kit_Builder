@@ -56,7 +56,7 @@ AddCSLuaFile("$name/src/client/compile.lua")
 AddCSLuaFile("$name/src/client/gunit.lua")
 AddCSLuaFile("$name/event/cl_init.lua")
 AddCSLuaFile("$name/src/client/main.lua")
-MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"ressource\\\\\\n")
+MsgC(Color(255,0,0),"@$name",Color(0,255,0)," LOAD ",Color(255,0,255),"ressource\\\\n")
 AddCSLuaFile("$name/controller/core/client.lua")
 EOF
 )
