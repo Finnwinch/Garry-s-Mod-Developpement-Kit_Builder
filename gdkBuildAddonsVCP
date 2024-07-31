@@ -293,8 +293,8 @@ $name.Core = setmetatable(Core,{
     __newindex = function(self,key,value) end,
     __call = function(self)
         MsgC(Color(255,0,0),"@$name",Color(0,255,255)," CHARGE ",Color(255,0,255),"Controller SERVER\\\\n")
-        net.Receive("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}",function(len)
-            self:getListener(net.ReadString())(len)
+        net.Receive("@$name::Core=>Controller{\$CLIENT}{\$PRIVATE}",function(len,ply)
+            self:getListener(net.ReadString())(len,ply)
         end)
         net.Receive("@$name::Core=>Controller{\$CLIENT}{\$ASYNC}",function(len,ply)
             ARGS = net.ReadTable()
